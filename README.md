@@ -1,27 +1,41 @@
-# SM602 : Résolution de Problèmes de Flots
+# Max-Flow / Min-Cost Solver
 
-## Description
-Projet du module de recherche opérationnelle SM602 vu à l'Efrei.
-Ce projet implémente plusieurs algorithmes pour résoudre des problèmes de flots dans les réseaux, notamment :
-- Algorithme d'Edmonds-Karp pour la maximisation de flot
-- Algorithme de Push-Relabel pour la maximisation de flot 
-- Algorithme de minimisation des coûts
+Three classic network flow algorithms implemented from scratch, plus a benchmark
+that measures how each one actually scales.
 
-## Prérequis
-- Python 3.x
+## Algorithms
 
-## Structure du projet
-- `main.py` : Point d'entrée du programme avec interface utilisateur
-- `maxEK.py` : Implémentation de l'algorithme d'Edmonds-Karp
-- `maxPR.py` : Implémentation de l'algorithme Push-Relabel
-- `minC.py` : Implémentation de l'algorithme de minimisation des coûts
-- `graph.py` : Fonctions de manipulation des graphes
-- `display.py` : Fonctions d'affichage des matrices et résultats
-- `complexity.py` : Fonctions permettant de tester la complexité des matrices
+| Module | Algorithm | Problem |
+| --- | --- | --- |
+| `maxEK.py` | Edmonds-Karp | Maximum flow, BFS augmenting paths |
+| `maxPR.py` | Push-relabel | Maximum flow, preflow with height labels |
+| `minC.py` | Successive shortest paths | Minimum-cost flow at a given value |
 
-## Format des fichiers d'entrée
-Les graphes doivent être fournis dans des fichiers `.txt` avec le format suivant :
-```txt
-n                    # Nombre de sommets
-matrice_capacites    # Matrice n×n des capacités
-matrice_couts        # Matrice n×n des coûts (optionnelle)
+Two different approaches to the same maximum-flow problem is the point: they
+have different complexity profiles, and the benchmark shows where each one wins.
+
+## Complexity benchmark
+
+`complexity.py` generates random networks of increasing size, times each
+algorithm and compares the measured growth against the theoretical bounds
+(O(VE²) for Edmonds-Karp, O(V²E) for push-relabel).
+
+## Usage
+
+```bash
+python main.py
+```
+
+The menu lets you pick one of the ten sample networks (`proposition_1.txt` …
+`proposition_10.txt`), choose an algorithm, and follow the residual graph
+evolving at each iteration.
+
+## Input format
+
+First line: number of vertices. Then the capacity matrix, and for min-cost
+problems the cost matrix. Vertex `0` is the source, vertex `n-1` the sink.
+
+## Implementation notes
+
+The residual graph is updated in place rather than rebuilt at each iteration,
+which keeps the per-augmentation cost down on the denser test networks.
